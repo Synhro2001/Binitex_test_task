@@ -20,6 +20,7 @@ class CovidService {
         return covidData.records
     }
 
+
 }
 
 export default CovidService;
