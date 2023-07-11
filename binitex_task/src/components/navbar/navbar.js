@@ -9,10 +9,11 @@ const Navbar = () => {
   const covidService = new CovidService()
 
   const [data, setData] = useState([]) 
+  const [filtredData, setfiltredData] = useState([]) 
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
   const [countryInputValue, setCountryInputValue] = useState("")
-  const [countryValue, setCountryValue] = useState("")
+
 
   // const [datesArr, setDatesArr] = useState([])
 
@@ -30,13 +31,14 @@ const Navbar = () => {
   const tableObj = useMemo(() => {
     const totalCases = data.reduce((accumulator, currentItem) => accumulator + currentItem.cases, 0);
     const totalDeaths = data.reduce((accumulator, currentItem) => accumulator + currentItem.deaths, 0);
-  
+    
     return data.map((item) => ({
       country: item.countriesAndTerritories,
       ...item,
       totalCases: totalCases,
       totalDeaths: totalDeaths
     }));
+
   }, [data]);
   
   // Conver date string to Date
@@ -55,16 +57,26 @@ const Navbar = () => {
   };
 
   // search country input value
-  const onInputValueChange = e => {
-    setCountryInputValue(e.target.value)
+  const filtredDataByCountry = (countryInputValue) => {
+    const filtredDatabyCountry = tableObj.filter((item) => {
+      return (
+        countryInputValue &&
+        item &&
+        item.country &&
+        item.country.toLowerCase().includes(countryInputValue) 
+      );
+    });
+    setfiltredData(filtredDatabyCountry)
   }
 
-  const filterDataByCountry = () => {
-    setCountryValue(countryInputValue)
-  }
-  
-  console.log(countryInputValue)
+  const handleChangeCountry = (value) => {
+    setCountryInputValue(value);
+    filtredDataByCountry(value);
+  };
+ 
+  console.log(filtredData)
 
+  console.log(minDate)
 
   // const minDate = new Date(Math.min.apply(null, getDates()));
   // const maxDate = new Date(Math.max.apply(null, getDates()));
@@ -80,9 +92,9 @@ const Navbar = () => {
             placeholder='Search country'
             className='input-cover'
             value={countryInputValue || ""}
-            onChange={onInputValueChange}
+            onChange={(e) => handleChangeCountry(e.target.value)}
           />
-          <button className='country-search-btn'>Search</button>
+          <button className='country-search-btn' >Search</button>
         </form>
         
         <input 
@@ -97,6 +109,7 @@ const Navbar = () => {
           type="date"
           className='period-input-cover'
           value={minDate}
+          minDate={'2019-12-31'}
           onInput={(e) => setMinDate(e.target.value)}
 
         />
@@ -105,11 +118,12 @@ const Navbar = () => {
           type="date"
           className='period-input-cover'
           value={maxDate}
+          maxDate={'2020-12-14'}
           onInput={(e) => setMaxDate(e.target.value)}
         />
       </div>
       <CovidTable
-          data = {tableObj}
+          data = {filtredData} 
         />
    
     </div>
