@@ -3,7 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import './covid-table.css'
 
-const CovidTable = ({data}) => {
+const CovidTable = ({data, filterCountry}) => {
+
 
   const columns = [
     {field: "country", headerName: "Country", width: 130 },
@@ -23,12 +24,14 @@ const CovidTable = ({data}) => {
     totalDeaths: item.totalDeaths,
     casesOnThousands: item.totalCases / 1000,
     deathsOnThousands: item.totalDeaths / 1000
-  }));
+  })); // getResult from navbar country input and make filter with used date
 
   const getRowId = (row) => {
 
     return row.id;
   };
+
+  const rowsFilter = rows.filter((item) => item.country.toLowerCase().includes(filterCountry.toLowerCase()) )
 
   return (
     <div className='pos'>
@@ -36,7 +39,7 @@ const CovidTable = ({data}) => {
       <DataGrid 
       style={{width: '100%'}}
       columns={columns}
-      rows={rows}
+      rows={rowsFilter}
       getRowId={getRowId}
       />
     </div>

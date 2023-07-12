@@ -1,21 +1,24 @@
 import React, { useEffect, useMemo, useState } from 'react'
+
+import DatePicker from 'react-datepicker'
+
 import CovidService from '../../services/covid-service'
 import CovidTable from '../covid-table/covid-table'
 
 import './navbar.css'
+import './date-picker.css'
+import 'react-datepicker/dist/react-datepicker.css'
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import moment from 'moment/moment'
 
 const Navbar = () => {
 
   const covidService = new CovidService()
 
   const [data, setData] = useState([]) 
-  const [filtredData, setfiltredData] = useState([]) 
-  const [minDate, setMinDate] = useState("");
-  const [maxDate, setMaxDate] = useState("");
   const [countryInputValue, setCountryInputValue] = useState("")
-
-
-  // const [datesArr, setDatesArr] = useState([])
+  const [startDate, setStartDate] = useState(new Date('2019/12/01'));
+  const [endDate, setEndDate] = useState(new Date('2020/08/28'));
 
   const getData = () => {
     covidService.getCovidData().then((allData) => {
@@ -27,8 +30,7 @@ const Navbar = () => {
     getData();
   }, []);
 
-
-  const tableObj = useMemo(() => {
+  const filteredData = useMemo(() => {
     const totalCases = data.reduce((accumulator, currentItem) => accumulator + currentItem.cases, 0);
     const totalDeaths = data.reduce((accumulator, currentItem) => accumulator + currentItem.deaths, 0);
     
@@ -36,50 +38,37 @@ const Navbar = () => {
       country: item.countriesAndTerritories,
       ...item,
       totalCases: totalCases,
-      totalDeaths: totalDeaths
-    }));
-
-  }, [data]);
-  
-  // Conver date string to Date
-  const flipDate = (date) => {
-    const dateParts = date.split('/');
-    const flippedDate = new Date(dateParts.reverse().join('/'));
-    return flippedDate
-  };
-
-  // Get dates from obj array
-  const getDates = () => {
-    const dates = data.map((item) => {
-      return flipDate(item.dateRep);
+      totalDeaths: totalDeaths,
+    })).filter((item) => {
+      return (
+        moment(item.dateRep, "DD/MM/YYYY").isSameOrAfter(startDate) &&
+        moment(item.dateRep, "DD/MM/YYYY").isSameOrBefore(endDate)
+      );
     });
-    return  dates;
-  };
+  }, [data, startDate, endDate]);
 
-  // search country input value
+
+
   const filtredDataByCountry = (countryInputValue) => {
-    const filtredDatabyCountry = tableObj.filter((item) => {
+    const filtredDatabyCountry = filteredData.filter((item) => {
       return (
         countryInputValue &&
         item &&
         item.country &&
-        item.country.toLowerCase().includes(countryInputValue) 
+        item.country.toLowerCase().includes(countryInputValue.toLowerCase()) 
       );
     });
-    setfiltredData(filtredDatabyCountry)
+    return (filtredDatabyCountry)
+
   }
 
   const handleChangeCountry = (value) => {
     setCountryInputValue(value);
     filtredDataByCountry(value);
   };
- 
-  console.log(filtredData)
 
-  console.log(minDate)
-
-  // const minDate = new Date(Math.min.apply(null, getDates()));
-  // const maxDate = new Date(Math.max.apply(null, getDates()));
+  console.log(countryInputValue)
+  console.log(filtredDataByCountry)
 
   return (
     <div className="navbar-container">
@@ -94,7 +83,7 @@ const Navbar = () => {
             value={countryInputValue || ""}
             onChange={(e) => handleChangeCountry(e.target.value)}
           />
-          <button className='country-search-btn' >Search</button>
+          {/* <button className='country-search-btn' >Search</button> */}
         </form>
         
         <input 
@@ -103,27 +92,28 @@ const Navbar = () => {
           className='input-cover'
         />
       </div>
-      <div className='period-container'>
-        <span className='period-text-cover'>Period ot</span>
-        <input 
-          type="date"
-          className='period-input-cover'
-          value={minDate}
-          minDate={'2019-12-31'}
-          onInput={(e) => setMinDate(e.target.value)}
+      <div style={{ margin: 0}}>
+        <DatePicker 
+         selectsStart
+         selected={startDate}
+         onChange={date => setStartDate(date)}
+         startDate={startDate}
+        />
+        
+        <DatePicker
+          selectsEnd
+          selected={endDate}
+          onChange={date => setEndDate(date)}
+          endDate={endDate}
+          startDate={startDate}
+          minDate={startDate}
+        />
+      
 
-        />
-        <span className='period-text-cover'>Do</span>
-        <input 
-          type="date"
-          className='period-input-cover'
-          value={maxDate}
-          maxDate={'2020-12-14'}
-          onInput={(e) => setMaxDate(e.target.value)}
-        />
       </div>
       <CovidTable
-          data = {filtredData} 
+          data = {filteredData} 
+          filterCountry = {countryInputValue}
         />
    
     </div>
@@ -131,3 +121,21 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+  // Conver date string to Date
+  // const flipDate = (date) => {
+  //   const dateParts = date.split('/');
+  //   const flippedDate = new Date(dateParts.reverse().join('/'));
+  //   return flippedDate
+  // };
+
+  // Get dates from obj array
+  // const getDates = () => {
+  //   const dates = data.map((item) => {
+  //     return flipDate(item.dateRep);
+  //   });
+  //   return  dates;
+  // };
+
+  // search country input value
+  // add icon X and search icon
