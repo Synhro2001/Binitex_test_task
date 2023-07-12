@@ -34,9 +34,8 @@
     cursor: pointer;
 }
 
-.input-cover {
-    display: flex;
-    width: 315px;
+.country-input-cover {
+    width: 230px;
     height: 100%;
     padding: 0px 16px;
     justify-content: center;
@@ -44,6 +43,16 @@
     gap: 10px;
     flex-grow:2;
 
+    border-radius: 20px;
+    background: #04356A;
+    border: none;
+    color: white;
+}
+
+.value-input-cover {
+    width: 100px;
+    height: 100%;
+    padding: 0px 16px;
     border-radius: 20px;
     background: #04356A;
     border: none;
@@ -87,5 +96,52 @@
     display: flex;
     width: 315px;
     height: 100%;
+}
+
+.dropdown {
+    height: 100% !important;
+   
+    position: relative;
+}
+
+.dropdown .dropdown-button {
+    padding: 10px;
+    box-shadow: 3px 3px 10px 6px rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+    background: rgba(4, 53, 106, 1);
+    color: #fff;
+    width: 230px;
+
+    display: flex;
+    align-items: center;
+    height: 30px;
+    justify-content: space-between;
+}
+
+.dropdown .dropdown-button span {
+    z-index: 99;
+    cursor: pointer;
+}
+
+.dropdown .dropdown-content {
+    position: absolute;
+    top: 110%;
+    box-shadow: 3px 3px 10px 6px rgba(0, 0, 0, 0.06);
+    background: rgba(4, 53, 106, 1);
+    border-radius: 20px;
+    color: #fff;
+    width: 86%;
+    z-index: 99;
+}
+
+.dropdown .dropdown-content .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+
+.dropdown .dropdown-content .dropdown-item:hover {
+    background-color: rgba(9, 104, 201, 0.50);
 }
 
