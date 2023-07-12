@@ -21,6 +21,8 @@ const Navbar = () => {
     { value: "totalDeaths", label: "Number of deaths total"},
     { value: "casesOnThousands", label: "Number of cases per 1000 inhabitants"},
     { value: "deathsOnThousands", label: "Number of deaths per 1000 inhabitants"}
+
+
   ]
 
   const covidService = new CovidService()
@@ -29,8 +31,14 @@ const Navbar = () => {
   const [countryInputValue, setCountryInputValue] = useState("")
   const [startDate, setStartDate] = useState(new Date('2019/12/01'));
   const [endDate, setEndDate] = useState(new Date('2020/08/28'));
-  const [showMenu, setShowMenu] = useState(false);
 
+  const [showMenu, setShowMenu] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("")
+
+  const [minMaxValue, setMinMaxValue] = useState({
+    minValue: '',
+    maxValue: ''
+  })
 
   const getData = () => {
     covidService.getCovidData().then((allData) => {
@@ -81,6 +89,21 @@ const Navbar = () => {
 
   // Select  filter by value DropDown 
 
+  const handleDropDown = (option) => {
+    setSelectedOption(option)
+    setShowMenu(false);
+  }
+
+  const handleFilterValue = (event) => {
+    const { name, value } = event.target;
+    setMinMaxValue(minMaxFilter => ({
+        ...minMaxFilter,
+        [name]: value,
+    }));
+};
+
+  // Select  filter by value DropDown 
+
   // useEffect(() => {
   //   const handler = () => setShowMenu(false);
 
@@ -115,13 +138,15 @@ const Navbar = () => {
         </form>
         <div className="dropdown">
           <div className="dropdown-button" >
-            Choose One
-            <span onClick={(e) => setShowMenu(!showMenu)}><CiCircleList / ></span>
+            {selectedOption.label || "Choose one option"}
+            <span onClick={(e) => setShowMenu(!showMenu)}><CiCircleList/></span>
           </div>
           <div className="dropdown-content">
             {showMenu && 
               options.map((option) => (
-                <div key={option.value} className="dropdown-item">
+                <div onClick={(e) => handleDropDown(option)}   
+                key={option.value}
+                className="dropdown-item">
                   {option.label}
                 </div>
               ))
@@ -130,14 +155,20 @@ const Navbar = () => {
           </div>
         </div>
         <input 
-            type='text'
+            type='number'
             placeholder='Значение от'
             className='value-input-cover'
+            name='minValue'
+            value={minMaxValue.minValue}
+            onChange={handleFilterValue}
           />
         <input 
-          type='text'
+          type='number'
           placeholder='Значение до'
           className='value-input-cover'
+          name="maxValue"
+          value={minMaxValue.maxValue}
+          onChange={handleFilterValue}
         />
         
       </div>
@@ -168,23 +199,4 @@ const Navbar = () => {
     </div>
   )
 }
-
 export default Navbar
-
-  // Conver date string to Date
-  // const flipDate = (date) => {
-  //   const dateParts = date.split('/');
-  //   const flippedDate = new Date(dateParts.reverse().join('/'));
-  //   return flippedDate
-  // };
-
-  // Get dates from obj array
-  // const getDates = () => {
-  //   const dates = data.map((item) => {
-  //     return flipDate(item.dateRep);
-  //   });
-  //   return  dates;
-  // };
-
-  // search country input value
-  // add icon X and search icon
