@@ -1,18 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
 import DatePicker from 'react-datepicker'
-import { CiCircleList } from 'react-icons/ci';
 import CovidService from '../../services/covid-service'
 import CovidTable from '../covid-table/covid-table'
 import CovidGraphic from '../covid-graphic/covid-graphic';
 
-import './navbar.css'
+import './component-handler.css'
 import './date-picker.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import moment from 'moment/moment'
 
-const Navbar = () => {
+const ComponentHandler = () => {
 
   const options = [
     { value: "cases", label: "Number of cases"},
@@ -83,8 +82,10 @@ const Navbar = () => {
   }
 
   const handleChangeCountry = (value) => {
-    setCountryInputValue(value);
-    filtredDataByCountry(value);
+    if (!/\d/.test(value)) {
+      setCountryInputValue(value);
+      filtredDataByCountry(value);
+    }
   };
 
   // Select  filter by value DropDown 
@@ -121,6 +122,12 @@ const Navbar = () => {
       filterCountry = {countryInputValue}
       selectedOption = {selectedOption}
       minMaxValue = {minMaxValue}
+      showMenu = {showMenu}
+      options = {options}
+      setShowMenu = {setShowMenu}
+      handleDropDown = {handleDropDown}
+      handleFilterValue = {handleFilterValue}
+      handleChangeCountry = {handleChangeCountry}
     />;
     } else if (currentComponent === 'Graphic') {
       return <CovidGraphic />;
@@ -135,7 +142,44 @@ const Navbar = () => {
     setMinMaxValue({ minValue: '', maxValue: '' });
   };
   
-  // Select  filter by value DropDown 
+  return (
+    <>
+   
+      {renderComponent()}
+      <div style={{ marginTop: 0}}>
+        <DatePicker 
+         selectsStart
+         selected={startDate}
+         onChange={date => setStartDate(date)}
+         startDate={startDate}
+        />
+        
+        <DatePicker
+          selectsEnd
+          selected={endDate}
+          onChange={date => setEndDate(date)}
+          endDate={endDate}
+          startDate={startDate}
+          minDate={startDate}
+        />
+      
+       
+      </div>
+     
+      <div className='component-switcher'>
+        <button className='component-switcher-button' onClick={switchToTable}>Table</button>
+        <button className='component-switcher-button' onClick={switchToGraphic}>Graphic</button>
+        <button onClick={resetFilters}>Reset Filters</button>
+      </div>
+  
+    </>
+      
+  )
+}
+export default ComponentHandler
+
+
+ // Select  filter by value DropDown 
 
   // useEffect(() => {
   //   const handler = () => setShowMenu(false);
@@ -156,83 +200,4 @@ const Navbar = () => {
   // console.log(selectedOption.label)
   // console.log(minMaxValue.maxValue)
 
-  return (
-    <div className="navbar-container">
-      <div className="nav-component">
-        <form className='country-search-form'>
-          <input 
-            type='text'
-            placeholder='Search country'
-            className='country-input-cover'
-            value={countryInputValue || ""}
-            onChange={(e) => handleChangeCountry(e.target.value)}
-          />
-          {/* <button className='country-search-btn' >Search</button> */}
-        </form>
-        <div className="dropdown">
-          <div className="dropdown-button" >
-            {selectedOption.label || "Choose one option"}
-            <span onClick={(e) => setShowMenu(!showMenu)}><CiCircleList/></span>
-          </div>
-          <div className="dropdown-content">
-            {showMenu && 
-              options.map((option) => (
-                <div onClick={(e) => handleDropDown(option)}   
-                key={option.value}
-                className="dropdown-item">
-                  {option.label}
-                </div>
-              ))
-            }
-           
-          </div>
-        </div>
-        <input 
-            type='number'
-            placeholder='Значение от'
-            className='value-input-cover'
-            name='minValue'
-            value={minMaxValue.minValue}
-            onChange={handleFilterValue}
-          />
-        <input 
-          type='number'
-          placeholder='Значение до'
-          className='value-input-cover'
-          name="maxValue"
-          value={minMaxValue.maxValue}
-          onChange={handleFilterValue}
-        />
-        
-      </div>
-      <div style={{ marginTop: 50}}>
-        <DatePicker 
-         selectsStart
-         selected={startDate}
-         onChange={date => setStartDate(date)}
-         startDate={startDate}
-        />
-        
-        <DatePicker
-          selectsEnd
-          selected={endDate}
-          onChange={date => setEndDate(date)}
-          endDate={endDate}
-          startDate={startDate}
-          minDate={startDate}
-        />
-      
-       
-      </div>
-      {renderComponent()}
-     
-      <div className='component-switcher'>
-        <button className='component-switcher-button' onClick={switchToTable}>Table</button>
-        <button className='component-switcher-button' onClick={switchToGraphic}>Graphic</button>
-        <button onClick={resetFilters}>Reset Filters</button>
-      </div>
-   
-    </div>
-  )
-}
-export default Navbar
+

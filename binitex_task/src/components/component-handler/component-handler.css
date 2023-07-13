@@ -1,0 +1,28 @@
+
+.component-switcher {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 12%;
+    background: rgba(9, 104, 201, 0.50);    
+    position: absolute;
+    bottom: 0;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+
+}
+
+.component-switcher-button {
+    width: 300px;
+    height: 50px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    
+    background: #04356A;
+    color: #fff;
+
+}
+

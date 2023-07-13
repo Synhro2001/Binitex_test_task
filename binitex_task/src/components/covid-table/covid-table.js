@@ -1,9 +1,22 @@
 import React from 'react'
 import { DataGrid } from '@mui/x-data-grid';
+import { CiCircleList } from 'react-icons/ci';
 
 import './covid-table.css'
 
-const CovidTable = ({data, filterCountry, selectedOption, minMaxValue}) => {
+const CovidTable = (
+  {
+    data,
+    filterCountry,
+    selectedOption,
+    minMaxValue,
+    handleChangeCountry,
+    showMenu,
+    options,
+    handleFilterValue,
+    handleDropDown, 
+    setShowMenu
+  }) => {
 
   console.log(minMaxValue.maxValue)
   console.log(minMaxValue.minValue)
@@ -44,7 +57,67 @@ const CovidTable = ({data, filterCountry, selectedOption, minMaxValue}) => {
   });
 
   return (
-    <div className='table-position'>
+    <>
+     <div className="nav-component">
+        <form className='country-search-form'>
+          <input 
+            type='text'
+            placeholder='Search country'
+            className='country-input-cover'
+            value={filterCountry || ""}
+            onChange={(e) => handleChangeCountry(e.target.value)}
+          />
+          {/* <button className='country-search-btn' >Search</button> */}
+        </form>
+        <div className="dropdown">
+          <div className="dropdown-button" >
+            {selectedOption.label || "Choose one option"}
+            <span onClick={(e) => setShowMenu(!showMenu)}><CiCircleList/></span>
+          </div>
+          <div className="dropdown-content">
+            {showMenu && 
+              options.map((option) => (
+                <div onClick={(e) => handleDropDown(option)}   
+                key={option.value}
+                className="dropdown-item">
+                  {option.label}
+                </div>
+              ))
+            }
+           
+          </div>
+        </div>
+        <input 
+            type='number'
+            placeholder='Значение от'
+            className='value-input-cover'
+            name='minValue'
+            value={minMaxValue.minValue}
+            onChange={handleFilterValue}
+            onKeyPress={(e) => {
+              const charCode = e.which ? e.which : e.keyCode;
+              if (charCode < 48 || charCode > 57) {
+                e.preventDefault();
+              }
+            }}
+          />
+        <input 
+          type='number'
+          placeholder='Значение до'
+          className='value-input-cover'
+          name="maxValue"
+          value={minMaxValue.maxValue}
+          onChange={handleFilterValue}
+          onKeyPress={(e) => {
+            const charCode = e.which ? e.which : e.keyCode;
+            if (charCode < 48 || charCode > 57) {
+              e.preventDefault();
+            }
+          }}
+        />
+        
+      </div>
+      <div className='table-position'>
       
       <DataGrid 
       style={{width: '100%'}}
@@ -53,6 +126,8 @@ const CovidTable = ({data, filterCountry, selectedOption, minMaxValue}) => {
       getRowId={getRowId}
       />
     </div>
+    </>
+ 
 );
 };
 
