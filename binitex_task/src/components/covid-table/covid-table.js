@@ -3,8 +3,11 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import './covid-table.css'
 
-const CovidTable = ({data, filterCountry}) => {
+const CovidTable = ({data, filterCountry, selectedOption, minMaxValue}) => {
 
+  console.log(minMaxValue.maxValue)
+  console.log(minMaxValue.minValue)
+  console.log(selectedOption)
 
   const columns = [
     {field: "country", headerName: "Country", width: 130 },
@@ -31,10 +34,17 @@ const CovidTable = ({data, filterCountry}) => {
     return row.id;
   };
 
-  const rowsFilter = rows.filter((item) => item.country.toLowerCase().includes(filterCountry.toLowerCase()) )
+  const rowsFilter = rows.filter((item) => {
+    const isCountryMatched = item.country.toLowerCase().includes(filterCountry.toLowerCase());
+    const isMinMaxValueMatched = selectedOption
+      ? item[selectedOption.value] >= minMaxValue.minValue && item[selectedOption.value] <= minMaxValue.maxValue
+      : true; 
+  
+    return isCountryMatched && isMinMaxValueMatched;
+  });
 
   return (
-    <div className='pos'>
+    <div className='table-position'>
       
       <DataGrid 
       style={{width: '100%'}}

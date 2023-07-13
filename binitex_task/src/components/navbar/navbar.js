@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker'
 import { CiCircleList } from 'react-icons/ci';
 import CovidService from '../../services/covid-service'
 import CovidTable from '../covid-table/covid-table'
+import CovidGraphic from '../covid-graphic/covid-graphic';
 
 import './navbar.css'
 import './date-picker.css'
@@ -14,15 +15,12 @@ import moment from 'moment/moment'
 const Navbar = () => {
 
   const options = [
-    { value: "country", label: "Country"},
     { value: "cases", label: "Number of cases"},
     { value: "deaths", label: "Number of deaths"},
     { value: "totalCases", label: "Number of cases total"},
     { value: "totalDeaths", label: "Number of deaths total"},
     { value: "casesOnThousands", label: "Number of cases per 1000 inhabitants"},
     { value: "deathsOnThousands", label: "Number of deaths per 1000 inhabitants"}
-
-
   ]
 
   const covidService = new CovidService()
@@ -51,20 +49,22 @@ const Navbar = () => {
   }, []);
 
   const filteredData = useMemo(() => {
-    const totalCases = data.reduce((accumulator, currentItem) => accumulator + currentItem.cases, 0);
-    const totalDeaths = data.reduce((accumulator, currentItem) => accumulator + currentItem.deaths, 0);
-    
-    return data.map((item) => ({
-      country: item.countriesAndTerritories,
-      ...item,
-      totalCases: totalCases,
-      totalDeaths: totalDeaths,
-    })).filter((item) => {
+    const filteredItems = data.filter((item) => {
       return (
         moment(item.dateRep, "DD/MM/YYYY").isSameOrAfter(startDate) &&
         moment(item.dateRep, "DD/MM/YYYY").isSameOrBefore(endDate)
       );
     });
+  
+    const totalCases = filteredItems.reduce((accumulator, currentItem) => accumulator + currentItem.cases, 0);
+    const totalDeaths = filteredItems.reduce((accumulator, currentItem) => accumulator + currentItem.deaths, 0);
+  
+    return filteredItems.map((item) => ({
+      country: item.countriesAndTerritories,
+      ...item,
+      totalCases: totalCases,
+      totalDeaths: totalDeaths,
+    }));
   }, [data, startDate, endDate]);
 
 
@@ -100,8 +100,41 @@ const Navbar = () => {
         ...minMaxFilter,
         [name]: value,
     }));
-};
+  };
 
+  // Component switcher 
+
+  const [currentComponent, setCurrentComponent] = useState('Table');
+
+  const switchToTable = () => {
+    setCurrentComponent('Table');
+  };
+
+  const switchToGraphic = () => {
+    setCurrentComponent('Graphic');
+  };
+
+  const renderComponent = () => {
+    if (currentComponent === 'Table') {
+      return  <CovidTable
+      data = {filteredData} 
+      filterCountry = {countryInputValue}
+      selectedOption = {selectedOption}
+      minMaxValue = {minMaxValue}
+    />;
+    } else if (currentComponent === 'Graphic') {
+      return <CovidGraphic />;
+    }
+  };
+
+  // Update filter function
+
+  const resetFilters = () => {
+    setCountryInputValue('');
+    setSelectedOption('');
+    setMinMaxValue({ minValue: '', maxValue: '' });
+  };
+  
   // Select  filter by value DropDown 
 
   // useEffect(() => {
@@ -120,8 +153,8 @@ const Navbar = () => {
 
 
 
-  console.log(countryInputValue)
-  console.log(filtredDataByCountry)
+  // console.log(selectedOption.label)
+  // console.log(minMaxValue.maxValue)
 
   return (
     <div className="navbar-container">
@@ -172,7 +205,7 @@ const Navbar = () => {
         />
         
       </div>
-      <div style={{ margin: 0}}>
+      <div style={{ marginTop: 50}}>
         <DatePicker 
          selectsStart
          selected={startDate}
@@ -189,12 +222,15 @@ const Navbar = () => {
           minDate={startDate}
         />
       
-
+       
       </div>
-      <CovidTable
-          data = {filteredData} 
-          filterCountry = {countryInputValue}
-        />
+      {renderComponent()}
+     
+      <div className='component-switcher'>
+        <button className='component-switcher-button' onClick={switchToTable}>Table</button>
+        <button className='component-switcher-button' onClick={switchToGraphic}>Graphic</button>
+        <button onClick={resetFilters}>Reset Filters</button>
+      </div>
    
     </div>
   )

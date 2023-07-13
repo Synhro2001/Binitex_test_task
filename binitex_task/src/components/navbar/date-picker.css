@@ -71,6 +71,6 @@
     color: var(--dark) !important;
   }
 
-  .react-datepicker-popper {
-    z-index: 99 !important;
-  }
+.react-datepicker-popper {
+  z-index: 99 !important;
+}
