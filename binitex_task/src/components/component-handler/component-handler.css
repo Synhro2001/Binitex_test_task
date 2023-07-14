@@ -26,3 +26,15 @@
 
 }
 
+.reset-button {
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+ 
+    height: 50px;
+    width: 100px;
+
+    background: #04356A;
+    color: #fff;
+}
+

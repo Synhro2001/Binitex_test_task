@@ -146,12 +146,13 @@ const ComponentHandler = () => {
     <>
    
       {renderComponent()}
-      <div style={{ marginTop: 0}}>
+      <div style={{ marginTop: 0}} className='datepicker-container'>
         <DatePicker 
          selectsStart
          selected={startDate}
          onChange={date => setStartDate(date)}
          startDate={startDate}
+         className='datepicker-input'
         />
         
         <DatePicker
@@ -161,6 +162,7 @@ const ComponentHandler = () => {
           endDate={endDate}
           startDate={startDate}
           minDate={startDate}
+          className='datepicker-input'
         />
       
        
@@ -169,7 +171,7 @@ const ComponentHandler = () => {
       <div className='component-switcher'>
         <button className='component-switcher-button' onClick={switchToTable}>Table</button>
         <button className='component-switcher-button' onClick={switchToGraphic}>Graphic</button>
-        <button onClick={resetFilters}>Reset Filters</button>
+        <button className='reset-button' onClick={resetFilters}>Reset Filters</button>
       </div>
   
     </>
@@ -177,27 +179,4 @@ const ComponentHandler = () => {
   )
 }
 export default ComponentHandler
-
-
- // Select  filter by value DropDown 
-
-  // useEffect(() => {
-  //   const handler = () => setShowMenu(false);
-
-  //   window.addEventListener("click", handler);
-  //   return () => {
-  //     window.removeEventListener("click", handler)
-  //   };
-  // });
-
-  // const handleDropDownInputClick = (e) => {
-  //   e.stopPropagation();
-  //   setShowMenu(!showMenu)
-  // };
-
-
-
-  // console.log(selectedOption.label)
-  // console.log(minMaxValue.maxValue)
-
 

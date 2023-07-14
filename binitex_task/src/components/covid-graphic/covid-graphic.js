@@ -58,37 +58,36 @@ const CovidGraphic = ({chartData}) => {
       legend: {
         position: 'top',
         labels: {
-          color: '#FFFFFF', // Устанавливаем цвет текста легенды
+          color: '#FFFFFF', 
         },
       },
       title: {
         display: true,
         text: 'Schedule of diseases and deaths',
-        color: '#FFFFFF', // Устанавливаем цвет текста заголовка
+        color: '#FFFFFF', 
       },
     },
     scales: {
-      // Добавляем опции для осей, если необходимо
       y: {
         ticks: {
-          color: '#FFFFFF', // Устанавливаем цвет текста на оси y
+          color: '#FFFFFF', 
         },
         grid: {
-          color: '', // Устанавливаем цвет сетки оси y
+          color: '', 
         },
       },
       x: {
         reverse: true,
         ticks: {
-          color: '#FFFFFF', // Устанавливаем цвет текста на оси x
+          color: '#FFFFFF', 
         },
         grid: {
-          color: '', // Устанавливаем цвет сетки оси x
+          color: '',
         },
       },
     },  animation: {
-      duration: 1000, // Длительность анимации в миллисекундах
-      easing: 'easeInOutQuart', // Функция времени для анимации (например, 'linear', 'easeInOutQuart', 'easeOutBounce', и т.д.)
+      duration: 1000, 
+      easing: 'easeInOutQuart',
     },
   };
 
@@ -116,31 +115,31 @@ const CovidGraphic = ({chartData}) => {
 };
 
   return (
-    <>
-    <div className="dropdown">
-      <div className="dropdown-button" >
-        {selectedCountry || "Choose country"}
-        <span onClick={(e) => setCountryMenu(!countryMenu)}><CiCircleList/></span>
-      </div>
-      <div className="dropdown-content scrool-contain">
-        { countryMenu && 
-          countryArray.map((item) => (
-            <div onClick={(e) => handleCountryMenuDropDown(item)}
-            key={item}
-            className="dropdown-item"
-            
-            >
-               {item}
-            </div>
-          ))
+    <div className='chart-container'>
+      <div className="dropdown">
+        <div className="dropdown-button" >
+          {selectedCountry || "Choose country"}
+          <span onClick={(e) => setCountryMenu(!countryMenu)}><CiCircleList/></span>
+        </div>
+        <div className="dropdown-content scrool-contain">
+          { countryMenu && 
+            countryArray.map((item) => (
+              <div onClick={(e) => handleCountryMenuDropDown(item)}
+              key={item}
+              className="dropdown-item"
+              
+              >
+                {item}
+              </div>
+            ))
 
-        }
+          }
+        </div>
+      </div>
+      <div className='covid-chart-container' >
+        <Line data={data} options={options} />
       </div>
     </div>
-    <div className='covid-chart-container' >
-      <Line data={data} options={options} />
-    </div>
-    </>
   
   )
 }
