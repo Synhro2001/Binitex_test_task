@@ -1,0 +1,9 @@
+.covid-chart-container {
+    width: 800px;
+    height: 100%;
+    display: inline !important;
+    flex-direction: none !important;
+
+    background: #04356a55;
+    border-radius: 20px;
+}

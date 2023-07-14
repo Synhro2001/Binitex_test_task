@@ -6,7 +6,7 @@ import './covid-table.css'
 
 const CovidTable = (
   {
-    data,
+    tableData,
     filterCountry,
     selectedOption,
     minMaxValue,
@@ -18,12 +18,11 @@ const CovidTable = (
     setShowMenu
   }) => {
 
-  console.log(minMaxValue.maxValue)
-  console.log(minMaxValue.minValue)
-  console.log(selectedOption)
+  console.log(tableData)
+
 
   const columns = [
-    {field: "country", headerName: "Country", width: 130 },
+    {field: "countriesAndTerritories", headerName: "Country", width: 130 },
     {field: "cases", headerName: "Number of cases", width: 130 },
     {field: "deaths", headerName: "Number of deaths", width: 130 },
     {field: "totalCases", headerName: "Number of cases total", width: 130 },
@@ -31,9 +30,9 @@ const CovidTable = (
     {field: "casesOnThousands", headerName: "Number of cases per 1000 inhabitants", width: 130 },
     {field: "deathsOnThousands", headerName: "Number of deaths per 1000 inhabitants", width: 130 }
   ]
-  const rows = data.map((item, index) => ({
+  const rows = tableData.map((item, index) => ({
     id: index + 1, // Generate id
-    country: item.country,
+    countriesAndTerritories: item.countriesAndTerritories,
     cases: item.cases,
     deaths: item.deaths,
     totalCases: item.totalCases,
@@ -43,12 +42,11 @@ const CovidTable = (
   })); // getResult from navbar country input and make filter with used date
 
   const getRowId = (row) => {
-
     return row.id;
   };
 
   const rowsFilter = rows.filter((item) => {
-    const isCountryMatched = item.country.toLowerCase().includes(filterCountry.toLowerCase());
+    const isCountryMatched = item.countriesAndTerritories.toLowerCase().includes(filterCountry.toLowerCase());
     const isMinMaxValueMatched = selectedOption
       ? item[selectedOption.value] >= minMaxValue.minValue && item[selectedOption.value] <= minMaxValue.maxValue
       : true; 

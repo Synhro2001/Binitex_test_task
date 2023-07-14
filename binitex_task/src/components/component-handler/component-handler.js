@@ -54,12 +54,10 @@ const ComponentHandler = () => {
         moment(item.dateRep, "DD/MM/YYYY").isSameOrBefore(endDate)
       );
     });
-  
+    
     const totalCases = filteredItems.reduce((accumulator, currentItem) => accumulator + currentItem.cases, 0);
     const totalDeaths = filteredItems.reduce((accumulator, currentItem) => accumulator + currentItem.deaths, 0);
-  
     return filteredItems.map((item) => ({
-      country: item.countriesAndTerritories,
       ...item,
       totalCases: totalCases,
       totalDeaths: totalDeaths,
@@ -73,8 +71,8 @@ const ComponentHandler = () => {
       return (
         countryInputValue &&
         item &&
-        item.country &&
-        item.country.toLowerCase().includes(countryInputValue.toLowerCase()) 
+        item.countriesAndTerritories &&
+        item.countriesAndTerritories.toLowerCase().includes(countryInputValue.toLowerCase()) 
       );
     });
     return (filtredDatabyCountry)
@@ -118,7 +116,7 @@ const ComponentHandler = () => {
   const renderComponent = () => {
     if (currentComponent === 'Table') {
       return  <CovidTable
-      data = {filteredData} 
+      tableData = {filteredData} 
       filterCountry = {countryInputValue}
       selectedOption = {selectedOption}
       minMaxValue = {minMaxValue}
@@ -130,7 +128,9 @@ const ComponentHandler = () => {
       handleChangeCountry = {handleChangeCountry}
     />;
     } else if (currentComponent === 'Graphic') {
-      return <CovidGraphic />;
+      return <CovidGraphic
+      chartData = {filteredData} 
+      />;
     }
   };
 
