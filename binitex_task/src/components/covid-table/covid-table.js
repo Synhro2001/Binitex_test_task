@@ -18,9 +18,6 @@ const CovidTable = (
     setShowMenu
   }) => {
 
-  console.log(tableData)
-
-
   const columns = [
     {field: "countriesAndTerritories", headerName: "Country", width: 130 },
     {field: "cases", headerName: "Number of cases", width: 130 },
@@ -93,8 +90,8 @@ const CovidTable = (
             value={minMaxValue.minValue}
             onChange={handleFilterValue}
             onKeyPress={(e) => {
-              const charCode = e.which ? e.which : e.keyCode;
-              if (charCode < 48 || charCode > 57) {
+              const key = e.key;
+              if (isNaN(key) || key === ' ') {
                 e.preventDefault();
               }
             }}
@@ -107,16 +104,14 @@ const CovidTable = (
           value={minMaxValue.maxValue}
           onChange={handleFilterValue}
           onKeyPress={(e) => {
-            const charCode = e.which ? e.which : e.keyCode;
-            if (charCode < 48 || charCode > 57) {
+            const key = e.key;
+            if (isNaN(key) || key === ' ') {
               e.preventDefault();
             }
           }}
-        />
-        
+        />  
       </div>
-      <div className='table-position'>
-      
+      <div className='table-position'> 
       <DataGrid 
       style={{width: '100%'}}
       columns={columns}
@@ -129,16 +124,4 @@ const CovidTable = (
 );
 };
 
-
 export default CovidTable
-
-
-//   function generateRandom() {
-//     let length = 8,
-//         charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-//         retVal = "";
-//     for (let i = 0, n = charset.length; i < length; ++i) {
-//         retVal += charset.charAt(Math.floor(Math.random() * n));
-//     }
-//     return retVal;
-// } 

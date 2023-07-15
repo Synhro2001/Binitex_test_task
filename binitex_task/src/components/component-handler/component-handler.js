@@ -161,7 +161,6 @@ const ComponentHandler = () => {
           onChange={date => setEndDate(date)}
           endDate={endDate}
           startDate={startDate}
-          minDate={startDate}
           className='datepicker-input'
         />
       

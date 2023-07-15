@@ -6,7 +6,6 @@ import 'chart.js/auto';
 
 import "./covid-graphic.css"
 
-
 const CovidGraphic = ({chartData}) => {
 
   const [countryMenu, setCountryMenu] = useState(false)
@@ -31,9 +30,7 @@ const CovidGraphic = ({chartData}) => {
   
     setCountryArray(uniqueCountries);
   }, [chartData]);
-  
-  console.log(countryArray);
-  
+    
   const getPeriodData = () => {
     return chartData
       .filter((item) => selectedCountry ? item.countriesAndTerritories === selectedCountry : item)
@@ -91,7 +88,6 @@ const CovidGraphic = ({chartData}) => {
     },
   };
 
-
   const data = {
     labels: getPeriodData().map((item) => item.date),
     datasets: [
@@ -126,13 +122,11 @@ const CovidGraphic = ({chartData}) => {
             countryArray.map((item) => (
               <div onClick={(e) => handleCountryMenuDropDown(item)}
               key={item}
-              className="dropdown-item"
-              
+              className="dropdown-item"   
               >
                 {item}
               </div>
             ))
-
           }
         </div>
       </div>
@@ -140,7 +134,6 @@ const CovidGraphic = ({chartData}) => {
         <Line data={data} options={options} />
       </div>
     </div>
-  
   )
 }
 

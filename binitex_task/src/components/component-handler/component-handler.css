@@ -1,4 +1,3 @@
-
 .component-switcher {
     display: flex;
     flex-direction: row;
@@ -23,7 +22,6 @@
     
     background: #04356A;
     color: #fff;
-
 }
 
 .reset-button {
@@ -37,4 +35,3 @@
     background: #04356A;
     color: #fff;
 }
-
